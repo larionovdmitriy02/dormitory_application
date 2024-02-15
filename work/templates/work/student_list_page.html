@@ -1,0 +1,143 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+
+{% block title %}
+Рейтинг
+{% endblock title %}
+
+{% block inline_css %}
+{% endblock inline_css %}
+
+{% block content %}
+<div class="form-group">
+    <form method="get">
+        <div class="input-group">
+            <input type="text" class="form-control" name="search" style="color: #fff;" placeholder="Искать..."
+                   aria-label="Recipient's username"
+                   aria-describedby="basic-addon2">
+            <div class="input-group-append">
+                <button class="btn btn-sm btn-primary" type="submit">Найти</button>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="row">
+    <div class="col-lg-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                {% if students %}
+                <h4 class="card-title">Студенты</h4>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>Студент</th>
+                            <th>Имя</th>
+                            <th>Общежитие</th>
+                            <th>Административные баллы</th>
+                            <th>Баллы ССО</th>
+                            <th>Всего баллов</th>
+                            <th>Статус</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for student in students %}
+                        {% if request.user.id == student.id %}
+                        <tr style="background-color: #22283d;">
+                            <td class="py-1">
+                                {% if student.profile_image %}
+                                <img src="{{ student.profile_image.url }}" alt="image"/>
+                                {% else %}
+                                <img src="{% static 'assets/images/no-profile-image.jpg' %}" alt="image"/>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <a href="{% url 'student_detail_view' student_id=student.id %}">
+                                    {{ student.first_name }}
+                                </a>
+                            </td>
+                            <td>{{ student.dormitory }}</td>
+                            <td>{{ student.administrative_points }}</td>
+                            <td>{{ student.activity_points }}</td>
+                            <td>{{ student.get_all_points }}</td>
+                            {% if student.status == 'Бронза' %}
+                            <td>
+                                <div class="badge badge-outline-warning"
+                                     style="color: #FF5733; border-color: #FF5733;">{{ student.status }}
+                                </div>
+                            </td>
+                            {% elif student.status == 'Серебро' %}
+                            <td>
+                                <div class="badge badge-outline-warning"
+                                     style="color: #C0C0C0; border-color: #C0C0C0;">{{ student.status }}
+                                </div>
+                            </td>
+                            {% elif student.status == 'Золото' %}
+                            <td>
+                                <div class="badge badge-outline-warning"
+                                     style="color: #FFD700; border-color: #FFD700;">{{ student.status }}
+                                </div>
+                            </td>
+                            {% endif %}
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td class="py-1">
+                                {% if student.profile_image %}
+                                <img src="{{ student.profile_image.url }}" alt="image"/>
+                                {% else %}
+                                <img src="{% static 'assets/images/no-profile-image.jpg' %}" alt="image"/>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <a href="{% url 'student_detail_view' student_id=student.id %}">
+                                    {{ student.first_name }}
+                                </a>
+                            </td>
+                            <td>{{ student.dormitory }}</td>
+                            <td>{{ student.administrative_points }}</td>
+                            <td>{{ student.activity_points }}</td>
+                            <td>{{ student.get_all_points }}</td>
+                            {% if student.status == 'Бронза' %}
+                            <td>
+                                <div class="badge badge-outline-warning"
+                                     style="color: #FF5733; border-color: #FF5733;">{{ student.status }}
+                                </div>
+                            </td>
+                            {% elif student.status == 'Серебро' %}
+                            <td>
+                                <div class="badge badge-outline-warning"
+                                     style="color: #C0C0C0; border-color: #C0C0C0;">{{ student.status }}
+                                </div>
+                            </td>
+                            {% elif student.status == 'Золото' %}
+                            <td>
+                                <div class="badge badge-outline-warning"
+                                     style="color: #FFD700; border-color: #FFD700;">{{ student.status }}
+                                </div>
+                            </td>
+                            {% endif %}
+                            {% if request.user.is_superuser %}
+                            <td>
+                                <a href="{% url 'add_student_to_work_view' student_id=student.id work_id=work_id %}">
+                                    <button class="btn-success p-2 mr-2" style="border-radius: 5px;">
+                                        Добавить
+                                    </button>
+                                </a>
+                            </td>
+                            {% endif %}
+                        </tr>
+                        {% endif %}
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                    {% else %}
+                    <h4 class="text-center mb-0">Записей не найдено. Возможно вы уже добавили</h4>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+

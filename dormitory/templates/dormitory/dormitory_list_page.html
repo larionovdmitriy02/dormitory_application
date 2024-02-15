@@ -1,0 +1,60 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+
+{% block title %}
+Новости
+{% endblock title %}
+
+{% block content %}
+
+{% block inline_css %}
+<style>
+    .preview-item:hover {
+        background-color: #21242e;
+    }
+</style>
+{% endblock inline_css %}
+
+<div class="row">
+    <div class="col-md-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex flex-row justify-content-between align-items-center">
+                    <h4 class="card-title mb-1">Новости</h4>
+                    <a href="{% url 'dormitory_create_view' %}">
+                        <button class="btn-primary p-2" style="border-radius: 5px;">Создать</button>
+                    </a>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="preview-list">
+                            {% for dormitory in dormitories %}
+                            <a href="{% url 'dormitory_detail_view' dormitory_id=dormitory.id %}"
+                               style="text-decoration: none; color: #fff;">
+                                <div class="preview-item border-bottom d-flex">
+                                    <div class="preview-thumbnail">
+                                        <div class="preview-icon bg-primary">
+                                            <i class="mdi mdi mdi-school"></i>
+                                        </div>
+                                    </div>
+                                    <div class="preview-item-content d-flex flex-grow justify-content-between align-items-center">
+                                        <div class="flex-grow">
+                                            <h6 class="preview-subject">{{ dormitory.name }}</h6>
+                                            <p class="text-muted mb-0">
+                                                Количество студентов - {{ dormitory.students.all.count }}
+                                            </p>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+

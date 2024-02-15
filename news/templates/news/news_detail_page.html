@@ -1,0 +1,39 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+
+{% block title %}
+Новости
+{% endblock title %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12 col-xl-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    {% if request.user.is_superuser %}
+                    <a href="{% url 'news_update_view' news_id=news.id %}">
+                        <button class="btn-primary p-2 mr-2" style="border-radius: 5px;">Изменить</button>
+                    </a>
+                    <a href="{% url 'news_delete_view' news_id=news.id %}">
+                        <button class="btn-danger p-2 mr-2" style="border-radius: 5px;">Удалить</button>
+                    </a>
+                    {% endif %}
+                </div>
+                <div class="text-center" style="font-size: 40px;">
+                    {{ news.title }}
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <p class="card-description">{{ news.created_at }}</p>
+                    </div>
+                    <div class="col-md-12">
+                        {{ news.content | safe }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+

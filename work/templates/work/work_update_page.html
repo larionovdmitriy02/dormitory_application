@@ -1,0 +1,202 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+
+{% block title %}
+Работа
+{% endblock title %}
+
+{% block inline_css %}
+<style>
+    .django-ckeditor-widget {
+        width: 100%;
+    }
+</style>
+{% endblock inline_css %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12 col-xl-12 grid-margin stretch-card">
+        <div class="card">
+            {{ form.errors }}
+            <form method="post">
+                {% csrf_token %}
+                {{ form.media }}
+                <div class="card-body">
+                    <div class="row">
+                        {% if request.user.is_superuser %}
+                        <button class="btn-primary p-2 mr-2" type="submit" style="border-radius: 5px;">Сохранить
+                        </button>
+                        {% endif %}
+                    </div>
+                    <div class="row mt-4">
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label">Название</label>
+                                <div class="col-sm-9">
+                                    {{ form.name }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                {% if work.is_administrative_work %}
+                                <label class="col-sm-3 col-form-label">Административные баллы</label>
+                                <div class="col-sm-9">
+                                    {{ form.administrative_points }}
+                                </div>
+                                {% else %}
+                                <label class="col-sm-3 col-form-label">Баллы ССО</label>
+                                <div class="col-sm-9">
+                                    {{ form.activity_points }}
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label">Дата работы</label>
+                                <div class="col-sm-9">
+                                    {{ form.work_date }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label">Количество мест</label>
+                                <div class="col-sm-9">
+                                    {{ form.participants_count }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label">Начало работы</label>
+                                <div class="col-sm-9">
+                                    {{ form.start_time }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label">Конец работы</label>
+                                <div class="col-sm-9">
+                                    {{ form.end_time }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <p style="color: #fff;"> Описание </p>
+                            {{ form.description }}
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <div class="row">
+                <div class="col-lg-12 grid-margin stretch-card">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title">
+                                Участники {{ work.participants.all.count }}/{{ work.participants_count }}</h4>
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Студент</th>
+                                            <th>Имя</th>
+                                            <th>Общежитие</th>
+                                            <th>Административные баллы</th>
+                                            <th>Баллы ССО</th>
+                                            <th>Всего баллов</th>
+                                            <th>Статус</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for student in work.participants.all %}
+                                        {% if request.user.id == student.id %}
+                                        <tr style="background-color: #22283d;">
+                                            <td class="py-1">
+                                                {% if student.profile_image %}
+                                                <img src="{{ student.profile_image.url }}" alt="image" />
+                                                {% else %}
+                                                <img src="{% static 'assets/images/no-profile-image.jpg' %}"
+                                                    alt="image" />
+                                                {% endif %}
+                                            </td>
+                                            <td>{{ student.first_name }}</td>
+                                            <td>{{ student.dormitory }}</td>
+                                            <td>{{ student.administrative_points }}</td>
+                                            <td>{{ student.activity_points }}</td>
+                                            <td>{{ student.get_all_points }}</td>
+                                            {% if student.status == 'Бронза' %}
+                                            <td>
+                                                <div class="badge badge-outline-warning"
+                                                    style="color: #FF5733; border-color: #FF5733;">{{ student.status }}
+                                                </div>
+                                            </td>
+                                            {% elif student.status == 'Серебро' %}
+                                            <td>
+                                                <div class="badge badge-outline-warning"
+                                                    style="color: #C0C0C0; border-color: #C0C0C0;">{{ student.status }}
+                                                </div>
+                                            </td>
+                                            {% elif student.status == 'Золото' %}
+                                            <td>
+                                                <div class="badge badge-outline-warning"
+                                                    style="color: #FFD700; border-color: #FFD700;">{{ student.status }}
+                                                </div>
+                                            </td>
+                                            {% endif %}
+                                        </tr>
+                                        {% else %}
+                                        <tr>
+                                            <td class="py-1">
+                                                {% if student.profile_image %}
+                                                <img src="{{ student.profile_image.url }}" alt="image" />
+                                                {% else %}
+                                                <img src="{% static 'assets/images/no-profile-image.jpg' %}"
+                                                    alt="image" />
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                <a href="{% url 'student_detail_view' student_id=student.id %}">
+                                                    {{ student.first_name }}
+                                                </a>
+                                            </td>
+                                            <td>{{ student.dormitory }}</td>
+                                            <td>{{ student.administrative_points }}</td>
+                                            <td>{{ student.activity_points }}</td>
+                                            <td>{{ student.get_all_points }}</td>
+                                            {% if student.status == 'Бронза' %}
+                                            <td>
+                                                <div class="badge badge-outline-warning"
+                                                    style="color: #FF5733; border-color: #FF5733;">{{ student.status }}
+                                                </div>
+                                            </td>
+                                            {% elif student.status == 'Серебро' %}
+                                            <td>
+                                                <div class="badge badge-outline-warning"
+                                                    style="color: #C0C0C0; border-color: #C0C0C0;">{{ student.status }}
+                                                </div>
+                                            </td>
+                                            {% elif student.status == 'Золото' %}
+                                            <td>
+                                                <div class="badge badge-outline-warning"
+                                                    style="color: #FFD700; border-color: #FFD700;">{{ student.status }}
+                                                </div>
+                                            </td>
+                                            {% endif %}
+                                        </tr>
+                                        {% endif %}
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endblock content %}

@@ -1,0 +1,63 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+
+{% block title %}
+Информация об общежитии
+{% endblock title %}
+
+{% block content %}
+
+{% block inline_css %}
+<style>
+    .django-ckeditor-widget {
+        width: 100%;
+    }
+</style>
+{% endblock inline_css %}
+
+<div class="row">
+    <div class="col-md-12 col-xl-12 grid-margin stretch-card">
+        <div class="card">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{form.media}}
+                <div class="card-body">
+                    <div class="row">
+                        {% if request.user.is_superuser %}
+                        <button type="submit" class="btn-primary p-2 mr-2" style="border-radius: 5px;">Сохранить</button>
+                        {% endif %}
+                        <a href="{% url 'dormitory_list_view' %}">
+                            <button class="btn-secondary p-2" type="button" style="border-radius: 5px;">Назад</button>
+                        </a>
+                    </div>
+                    <div class="row mt-5">
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label">Название</label>
+                                <div class="col-sm-9">
+                                    {{ form.name }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label">Изображение</label>
+                                <div class="col-sm-9">
+                                    {{ form.image }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <p style="color: #fff;"> Описание </p>
+                            {{ form.description }}
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+

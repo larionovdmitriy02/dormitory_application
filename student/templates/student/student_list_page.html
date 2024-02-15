@@ -1,0 +1,52 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+
+{% block title %}
+Студенты
+{% endblock title %}
+
+{% block inline_css %}
+{% endblock inline_css %}
+
+{% block content %}
+<div class="form-group">
+    <form method="get">
+        <div class="input-group">
+            <input type="text" class="form-control" name="search" style="color: #fff;" placeholder="Искать..."
+                   aria-label="Recipient's username"
+                   aria-describedby="basic-addon2">
+            <div class="input-group-append">
+                <button class="btn btn-sm btn-primary" type="submit">Найти</button>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="card" style="padding: 10px;">
+    <div class="row">
+    {% if students %}
+    {% for student in students %}
+    <div class="col-lg-3 col-md-4 col-sm-12">
+        <div class="card mb-3" style="width: 12rem; height: auto;">
+            {% if student.profile_image %}
+            <img class="card-img-top" style="height: 11rem;" src="{{ student.profile_image.url }}" alt="Card image cap">
+            {% else %}
+            <img class="card-img-top" style="height: 11rem;" src="{% static 'assets/images/no-profile-image.jpg' %}"
+                 alt="Card image cap">
+            {% endif %}
+            <div class="card-body text-center" style="background-color: #383c47; border-radius: 10px;">
+                <h5 class="card-title" style="height: 2rem;">{{ student.get_short_name }}</h5>
+                <a href="{% url 'student_detail_view' student_id=student.id %}" class="btn btn-primary"
+                   style="padding-right: 20px; padding-left: 20px; padding-top: 15px; padding-bottom: 15px; font-size: 15px;">Смотреть</a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+    {% else %}
+    <div class="col-12 text-center mt-3">
+        <h3>Записи не найдены</h3>
+    </div>
+    {% endif %}
+</div>
+</div>
+{% endblock content %}
+

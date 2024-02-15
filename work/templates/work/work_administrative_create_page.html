@@ -1,0 +1,92 @@
+{% extends 'dashboard/base.html' %} {% load static %} {% block title %} Работа
+{% endblock title %} {% block inline_css %}
+<style>
+  .django-ckeditor-widget {
+    width: 100%;
+  }
+</style>
+{% endblock inline_css %} {% block content %}
+<div class="row">
+  <div class="col-md-12 col-xl-12 grid-margin stretch-card">
+    <div class="card">
+      {{ form.errors }}
+      <form method="post">
+        {% csrf_token %} {{ form.media }}
+        <div class="card-body">
+          <div class="row" style="
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+            ">
+            {% if request.user.is_superuser %}
+            <button class="btn-primary p-2 mr-2" type="submit" style="border-radius: 5px">
+              Сохранить
+            </button>
+            <span class="badge badge-pill badge-success">Административная работа</span>
+            {% endif %}
+          </div>
+          <div class="row mt-4">
+            <div class="col-md-6">
+              <div class="form-group row">
+                <label class="col-sm-3 col-form-label">Название</label>
+                <div class="col-sm-9">{{ form.name }}</div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group row">
+                <label class="col-sm-3 col-form-label">Административные баллы</label>
+                <div class="col-sm-9">{{ form.administrative_points }}</div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group row">
+                <label class="col-sm-3 col-form-label">Дата работы</label>
+                <div class="col-sm-9">{{ form.work_date }}</div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group row">
+                <label class="col-sm-3 col-form-label">Количество мест</label>
+                <div class="col-sm-9">{{ form.participants_count }}</div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group row">
+                <label class="col-sm-3 col-form-label">Начало работы</label>
+                <div class="col-sm-9">{{ form.start_time }}</div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group row">
+                <label class="col-sm-3 col-form-label">Конец работы</label>
+                <div class="col-sm-9">{{ form.end_time }}</div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <p style="color: #fff">Описание</p>
+              {{ form.description }}
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  {% endblock content %}
+</div>
+
+{% block custom_js %}
+<script>
+  $('.timepicker').timepicker({
+    timeFormat: 'HH:mm:ss',
+    interval: 60,
+    minTime: '0',
+    maxTime: '23',
+    startTime: '10:00',
+    dynamic: false,
+    dropdown: true,
+    scrollbar: true
+  });
+</script>
+{% endblock custom_js %}

@@ -1,0 +1,78 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+
+{% block title %}
+Новости
+{% endblock title %}
+
+{% block content %}
+
+{% block inline_css %}
+<style>
+    .preview-item:hover {
+        background-color: #21242e;
+    }
+</style>
+{% endblock inline_css %}
+
+<div class="row">
+    <div class="col-md-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                {% if work_history_nonactive %}
+                <div class="d-flex flex-row justify-content-between align-items-center">
+                    <h3>Завершенные работы</h3>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="preview-list">
+                            {% for work in work_history_nonactive %}
+                            <div class="preview-item border-bottom">
+                                <div class="preview-thumbnail">
+                                    <div class="preview-icon bg-danger">
+                                        <i class="mdi mdi-worker"></i>
+                                    </div>
+                                </div>
+                                <div class="preview-item-content d-sm-flex flex-grow">
+                                    <div class="flex-grow">
+                                        <h6 class="preview-subject">{{ work.work_id.name }}</h6>
+                                        <p class="text-muted mb-2">
+                                            {% if work.work_id.is_administrative_work %}
+                                            <span class="badge badge-pill badge-success"
+                                                style="padding-top: 5px; padding-bottom: 5px;">Административная
+                                                работа</span>
+                                            {% else %}
+                                            <span class="badge badge-pill badge-info"
+                                                style="padding-top: 5px; padding-bottom: 5px;">Работа
+                                                ССО</span>
+                                            {% endif %}
+                                        </p>
+                                        <span class="badge badge-pill badge-warning"
+                                            style="padding-top: 5px; padding-bottom: 5px; font-size: 0.8rem;">
+                                            {{ work.status }}</span>
+                                    </div>
+                                    <div class="mr-auto text-sm-right pt-2 pt-sm-0">
+                                        <p class="text-muted">
+                                            {{ work.work_id.work_date }} {{ work.work_id.start_time }} -
+                                            {{ work.work_id.end_time }}
+                                        </p>
+                                        <!-- <p class="text-muted mb-0">
+                                                Осталось свободных мест - {{ work.work_id.get_available_seats }}
+                                            </p> -->
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                {% else %}
+                <div class="d-flex flex-row justify-content-between align-items-center">
+                    <h4 class="mb-0">На данный момент завершенных работ нет</h4>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

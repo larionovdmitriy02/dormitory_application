@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
+
 import os
 from pathlib import Path
 
@@ -87,7 +88,7 @@ DATABASES = {
         "NAME": "dormitory_db",
         "USER": "postgres",
         "PASSWORD": "12345",
-        "HOST": "172.17.0.2",
+        "HOST": "172.17.0.3",
         "PORT": "5432",
     }
 }

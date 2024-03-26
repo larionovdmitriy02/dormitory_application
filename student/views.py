@@ -1,3 +1,4 @@
+import csv
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
@@ -30,9 +31,9 @@ def student_download_document_view(request: HttpRequest, file_id: str) -> HttpRe
     file_path = file_obj.file_content.path
     with open(file_path, "rb") as file:
         response = HttpResponse(file.read(), content_type="application/force-download")
-        response[
-            "Content-Disposition"
-        ] = f"attachment; filename={file_obj.file_content.name}"
+        response["Content-Disposition"] = (
+            f"attachment; filename={file_obj.file_content.name}"
+        )
         return response
 
 
@@ -213,3 +214,33 @@ def student_update_view(request: HttpRequest, student_id: str) -> HttpResponse:
         template_name="student/student_update_page.html",
         context=context,
     )
+
+
+def student_export_to_csv(request):
+    fields_to_export = [
+        "email",
+        "first_name",
+        "second_name",
+        "third_name",
+        "administrative_points",
+        "activity_points",
+        "phone_number",
+    ]
+    fields_to_export_on_russian = [
+        "Email",
+        "Имя",
+        "Фамилия",
+        "Отчество",
+        "Административные баллы",
+        "Баллы ССО",
+        "Телефон",
+    ]
+    students = Student.objects.all()
+    response = HttpResponse(content_type="text/csv")
+    response["Content-Disposition"] = 'attachment; filename="exported_data.csv"'
+    csv_writer = csv.writer(response)
+    csv_writer.writerow(fields_to_export_on_russian)
+    for student in students:
+        data_row = [getattr(student, field) for field in fields_to_export]
+        csv_writer.writerow(data_row)
+    return response

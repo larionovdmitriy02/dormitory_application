@@ -7,11 +7,7 @@ urlpatterns = [
     path("logout/", views.student_logout_view, name="student_logout_view"),
     path("student/create/", views.student_create_view, name="student_create_view"),
     path("student/rating", views.student_rating_view, name="student_rating_view"),
-    path(
-        "student/file/<str:file_id>/download",
-        views.student_download_document_view,
-        name="student_download_document_view",
-    ),
+    path("student/export/", views.student_export_to_csv, name="student_export_to_csv"),
     path(
         "student/<str:student_id>/file/<str:file_id>/delete/",
         views.student_document_delete_view,

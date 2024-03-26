@@ -136,9 +136,9 @@ class Student(AbstractBaseUser):
 
 @receiver(pre_save, sender=Student)
 def update_student_status(sender, instance, **kwargs):
-    if instance.get_all_points < 100:
+    if int(instance.get_all_points) < 100:
         instance.status = "Бронза"
-    elif 100 <= instance.get_all_points <= 200:
+    elif 100 <= int(instance.get_all_points) <= 200:
         instance.status = "Серебро"
     else:
         instance.status = "Золото"
